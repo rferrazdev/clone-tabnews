@@ -1,0 +1,50 @@
+/* status.module.css */
+.terminal {
+  background-color: #000; /* Black background */
+  font-family: monospace; /* Monospace font */
+  color: #0f0; /* Green text */
+  min-height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.screen {
+  background-color: #111;
+  border: 2px solid #0f0;
+  padding: 20px;
+  box-shadow: 0 0 10px #0f0;
+  width: 80%;
+  max-width: 800px;
+  overflow-y: auto; /* Add scroll if content overflows */
+}
+
+.header,
+.subheader,
+.robcos {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.content {
+  padding: 10px;
+  border-top: 1px dashed #0f0;
+}
+
+.userLog {
+  white-space: pre-wrap; /* Preserve line breaks */
+}
+
+.databaseStatus {
+  margin-top: 20px; /* Add some spacing above the database info */
+  font-weight: bold; /* Make the "Database" text bold */
+}
+
+.databaseStatus > div {
+  /* Style the inner divs */
+  margin-left: 20px; /* Indent the data */
+}
+
+.userLog > div {
+  margin-left: 20px;
+}
