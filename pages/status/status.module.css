@@ -1,7 +1,8 @@
-/* status.module.css */
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
+
 .terminal {
+  font-family: "Share Tech Mono", monospace; /* Use Share Tech Mono, fallback to monospace */
   background-color: #000; /* Black background */
-  font-family: monospace; /* Monospace font */
   color: #0f0; /* Green text */
   min-height: 100vh; /* Ensure full viewport height */
   display: flex;
