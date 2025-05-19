@@ -1,40 +1,37 @@
+import { createRouter } from "next-connect";
 import database from "infra/database.js";
-import { InternalServerError } from "infra/errors.js";
+import controller from "infra/controller";
 
-async function status(req, res) {
-  try {
-    const updatedAt = new Date().toISOString();
+const router = createRouter();
 
-    const versionQuery = await database.query("SHOW server_version;");
-    const dbVersion = versionQuery.rows[0].server_version;
+router.get(getHandler);
 
-    const maxConnectionsQuery = await database.query("SHOW max_connections;");
-    const maxConnections = maxConnectionsQuery.rows[0].max_connections;
+export default router.handler(controller.errorHandlers);
 
-    const dbName = process.env.POSTGRES_DB;
-    const openedConnectionsQuery = await database.query({
-      text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
-      values: [dbName],
-    });
-    const openedConnections = openedConnectionsQuery.rows[0].count;
+async function getHandler(req, res) {
+  const updatedAt = new Date().toISOString();
 
-    res.status(200).json({
-      updated_at: updatedAt,
-      dependencies: {
-        database: {
-          version: dbVersion,
-          max_connections: parseInt(maxConnections),
-          opened_connections: openedConnections,
-        },
+  const versionQuery = await database.query("SHOW server_version;");
+  const dbVersion = versionQuery.rows[0].server_version;
+
+  const maxConnectionsQuery = await database.query("SHOW max_connections;");
+  const maxConnections = maxConnectionsQuery.rows[0].max_connections;
+
+  const dbName = process.env.POSTGRES_DB;
+  const openedConnectionsQuery = await database.query({
+    text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
+    values: [dbName],
+  });
+  const openedConnections = openedConnectionsQuery.rows[0].count;
+
+  res.status(200).json({
+    updated_at: updatedAt,
+    dependencies: {
+      database: {
+        version: dbVersion,
+        max_connections: parseInt(maxConnections),
+        opened_connections: openedConnections,
       },
-    });
-  } catch (error) {
-    const publicErrorObj = new InternalServerError({
-      cause: error,
-    });
-    console.error("Error retrieving status:", publicErrorObj);
-    res.status(500).json(publicErrorObj);
-  }
+    },
+  });
 }
-
-export default status;
